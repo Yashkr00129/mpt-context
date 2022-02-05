@@ -1,12 +1,26 @@
 import * as React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import * as Material from "@mui/material";
+import {
+  Container,
+  Typography,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  IconButton,
+  TextField,
+  Box,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { state } from "../Context/Context";
 
-export default function BasicTable() {
+export default function Assignments() {
   const [assignments, setAssignments] = React.useContext(state);
+
   const navigate = useNavigate();
 
   const removeAssignment = (id) => {
@@ -17,54 +31,88 @@ export default function BasicTable() {
     localStorage.setItem("assignments", JSON.stringify(newAssignments));
   };
 
+  const onFilter = (e) => {
+    const { value } = e.target;
+    if (value === "" || value === undefined || value === null)
+      setAssignments(JSON.parse(localStorage.getItem("assignments")));
+    else {
+      setAssignments(
+        assignments.filter(
+          (assignment) =>
+            assignment.title.includes(value) ||
+            assignment.title.toUpperCase().includes(value) ||
+            assignment.title.toLowerCase().includes(value) ||
+            assignment.status.includes(value) ||
+            assignment.status.toUpperCase().includes(value) ||
+            assignment.status.toLowerCase().includes(value) ||
+            assignment.details.includes(value) ||
+            assignment.details.toUpperCase().includes(value) ||
+            assignment.details.toLowerCase().includes(value)
+        )
+      );
+    }
+  };
+
   return (
-    <Material.Container>
-      <Material.Typography variant={"h4"} sx={{ marginY: "2rem" }}>
-        Your Assignments
-      </Material.Typography>
-      <Material.TableContainer variant="outlined" component={Material.Paper}>
-        <Material.Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <Material.TableHead>
-            <Material.TableRow>
-              <Material.TableCell>S.no</Material.TableCell>
-              <Material.TableCell>Title</Material.TableCell>
-              <Material.TableCell>Status</Material.TableCell>
-              <Material.TableCell>Edit</Material.TableCell>
-              <Material.TableCell>Trash</Material.TableCell>
-            </Material.TableRow>
-          </Material.TableHead>
-          <Material.TableBody>
+    <Container>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant={"h4"} sx={{ marginY: "2rem" }}>
+          Your Assignments
+        </Typography>
+        <TextField
+          label="Search Assignments"
+          onChange={(e) => onFilter(e)}
+          variant="outlined"
+        />
+      </Box>
+
+      <TableContainer variant="outlined" component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>S.no</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Trash</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {assignments.map((row) => (
-              <Material.TableRow
+              <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <Material.TableCell component="th" scope="row">
+                <TableCell component="th" scope="row">
                   {assignments.indexOf(row) + 1}
-                </Material.TableCell>
-                <Material.TableCell>{row.title}</Material.TableCell>
-                <Material.TableCell>{row.status}</Material.TableCell>
-                <Material.TableCell>
-                  <Material.IconButton
-                    onClick={() => navigate(`/edit/${row.id}`)}
-                  >
+                </TableCell>
+                <TableCell>{row.title}</TableCell>
+                <TableCell>{row.status}</TableCell>
+                <TableCell>
+                  <IconButton onClick={() => navigate(`/edit/${row.id}`)}>
                     <EditIcon />
-                  </Material.IconButton>
-                </Material.TableCell>
-                <Material.TableCell>
-                  <Material.IconButton
+                  </IconButton>
+                </TableCell>
+                <TableCell>
+                  <IconButton
                     onClick={() => {
                       removeAssignment(row.id);
                     }}
                   >
                     <DeleteOutlineOutlinedIcon />
-                  </Material.IconButton>
-                </Material.TableCell>
-              </Material.TableRow>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
             ))}
-          </Material.TableBody>
-        </Material.Table>
-      </Material.TableContainer>
-    </Material.Container>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 }

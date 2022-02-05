@@ -35,9 +35,9 @@ export default function EditAssignments() {
     if (details === "") setErrors({ ...errors, details: true });
 
     if (title && status && details) {
-      let index = assignments.findIndex(
-        (assignment) => assignment.id === params.id
-      );
+      // let index = assignments.findIndex(
+      //   (assignment) => assignment.id === params.id
+      // );
       let stateWithoutCurrent = assignments.filter(
         (assignment) => assignment.id !== params.id
       );

@@ -1,12 +1,15 @@
 import * as React from "react";
-import {Toolbar,Typography,Box,AppBar,Button} from "@mui/material";
+import { Toolbar, Typography, Box, AppBar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Nav() {
   const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <Typography
             variant="h6"
@@ -24,6 +27,9 @@ export default function Nav() {
           </Button>
         </Toolbar>
       </AppBar>
+      <br />
+      <br />
+      <br />
     </Box>
   );
 }
